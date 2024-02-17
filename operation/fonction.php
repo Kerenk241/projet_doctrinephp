@@ -53,26 +53,37 @@ function creer($entityManager) {
 }
 
 
-function afficher($entityManager, $auteurId) {
-    $auteur = $entityManager->getRepository('Auteur')->find($auteurId);
+function afficher($entityManager) {
+    // Récupérer tous les auteurs depuis la base de données
+    $auteurs = $entityManager->getRepository('Auteur')->findAll();
 
-    if (!$auteur) {
-        echo "Auteur non trouvé.\n";
+    // Vérifier s'il n'y a aucun auteur trouvé
+    if (empty($auteurs)) {
+        echo "Aucun auteur trouvé.\n";
         return;
     }
 
-    // Afficher les détails de l'auteur
-    echo "Auteur : {$auteur->getNom()} {$auteur->getPrenom()}\n";
-    echo "Livres :\n";
+    // Parcourir tous les auteurs et afficher leurs détails
+    foreach ($auteurs as $auteur) {
+        echo "Auteur : {$auteur->getNom()} {$auteur->getPrenom()}\n";
+        echo "Identifiant de l'auteur : {$auteur->getId()}\n";
+        echo "Livres :\n";
 
-    // Récupérer tous les livres associés à cet auteur
-    $livres = $auteur->getLivres();
+        // Récupérer tous les livres associés à cet auteur
+        $livres = $auteur->getLivres();
 
-    // Afficher les détails de chaque livre
-    foreach ($livres as $livre) {
-        echo " - Titre : {$livre->getTitre()}, Genre : {$livre->getGenre()}, Prix : {$livre->getPrix()}\n";
+        // Afficher les détails de chaque livre
+        foreach ($livres as $livre) {
+            
+            echo "- Identifiant du livre : {$livre->getId()}\n";
+            echo "- Titre : {$livre->getTitre()}\n";
+            echo "- Genre : {$livre->getGenre()}\n";
+            echo "- Prix : {$livre->getPrix()}\n";
+        }
+        echo "***********************************************\n";
     }
 }
+
 
 function modifier($entityManager, $livreId, $nouveauTitre) {
     // Récupérer le livre à partir de l'ID
@@ -102,8 +113,11 @@ function supprimer($entityManager, $auteurId) {
         return;
     }
 
-    // Supprimer tous les livres associés à l'auteur
-    foreach ($auteur->getLivres() as $livre) {
+    // Récupérer tous les livres associés à l'auteur
+    $livres = $auteur->getLivres();
+
+    // Supprimer les livres associés à l'auteur
+    foreach ($livres as $livre) {
         $entityManager->remove($livre);
     }
 
@@ -115,5 +129,6 @@ function supprimer($entityManager, $auteurId) {
 
     echo "Auteur et ses livres supprimés avec succès.\n";
 }
+
 
 ?>

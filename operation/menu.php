@@ -9,7 +9,7 @@ require_once "fonction.php";
 do {
     echo "\nMenu :\n";
     echo "1. Créer un nouvel auteur et ses livres\n";
-    echo "2. Afficher un auteur\n";
+    echo "2. Afficher les auteurs et leurs livres\n";
     echo "3. Modifier le titre d'un livre\n";
     echo "4. Supprimer un auteur avec tous ses livres\n";
     echo "5. Quitter\n";
@@ -21,9 +21,7 @@ do {
             creer($entityManager);
             break;
         case 2:
-            echo "ID de l'auteur à afficher : ";
-            $auteurId = trim(fgets(STDIN));
-            afficher($entityManager, $auteurId);
+            afficher($entityManager);
             break;
         case 3:
             echo "ID du livre à modifier : ";
